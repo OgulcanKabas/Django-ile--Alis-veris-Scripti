@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<h2 style="text-align: center;">SEPET ({{sepet_urun_sayisi}})</h2>
+<h4 style="text-align: center;">GENEL TUTAR : ({{genel_total}} TL)</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <input type="hidden" value="onay" name="onay">
+    <input type="hidden" value="{{genel_total}}" name="genel_total">
+    <div style="text-align: center;"><input class="btn btn-success" type="submit" value="Sepeti Onayla"></div>
+  </form>
+
+
+<div class="container">
+  {% if alert %}
+  <div class="alert alert-success">{{alert}}</div>
+  {% endif %}
+  <div class="row">
+    {% for row in data %}
+    <div class="card col-sm-3 mt-2">
+      <img class="card-img-top" src="{{row.resim.url}} " alt="Card image cap">
+      <div class="card-body">
+        <center><h5 class="card-title">{{row.urun_adi}}</h5></center>
+        <form method="POST">
+          {% csrf_token %}
+          <p> <b>Adet : </b>{{row.adet}} Adet</p>
+          <p> <b>Birim Fiyatı :</b> {{row.birim_fiyat}} TL</p>
+          <p> <b>Toplam Fiyat :</b> {{row.total_tutar}} TL</p>
+          <input type="hidden" value="{{row.sepet_id}}" name="sepet_id">
+          <input class="btn btn-danger" type="submit" value="Sepetten Çıkart">
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<style>
+  .caticerik{ 
+	height: 40px;
+    overflow: hidden;
+	}
+  .devamyazi{
+	cursor:pointer;
+  
+	}
+  .devaminioku{
+    height: 100px;
+    width: 250px;
+
+  }
+</style>
+<div class="container">
+  {% if alert %}
+  <div class="alert alert-success">{{alert}}</div>
+  {% endif %}
+  
+    <section class="py-5">
+      <center> <div class="devaminioku alert alert-success">
+        <div class="devamyazi btn">Açıklamaları Göster</div>
+      </div></center>
+     
+      <div class="container px-4 px-lg-5 mt-5">
+          <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div class="col mb-5">
+              <div class="card h-100">
+                  <div class="card-body p-4">
+                    <h4 class="fw-bolder">Kategori Filtrele</h4>
+                      <div class="text-center">
+                        <ul style="text-align: left">
+                          <li class="fw-bolder">
+                            <a href="{% url 'home:index'%}">Tümü</a>
+                          </li>
+                        {% for kategori in kategoriler %}
+                        <li class="fw-bolder">
+                          <a href="{% url 'login:index_filtre' kategori.id %}">{{kategori.adi}}</a>
+                        </li>
+
+             
+                        {% endfor %}
+                      </ul>  
+
+                      </div>
+                  </div>
+                
+              </div>
+          </div>
+            {% for urun in urunler %} 
+            <!-- ürünleri for döngüsüne alıyoruz. -->
+              
+              <div class="col mb-5">
+                  <div class="card h-100">
+                    <!-- Nesnenin alanlarını HTML'de ilgili yerlere yazdırıyoruz. -->
+
+                    <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">{{urun.kategori.adi}}</div>
+
+                      <img class="card-img-top" src="{{urun.resim.url}} " />
+                      <div class="card-body p-4">
+                          <div class="text-center">
+                              <h5 class="fw-bolder">{{urun.urun_adi}}</h5>
+                              <div class="caticerik">
+
+                              <b>{{urun.urun_aciklama}}</b>
+                             
+                              </div>
+                      
+                              {{urun.birim_fiyat}} TL
+                          </div>
+                      </div>
+                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <form method="POST">
+                          <!-- Sepete ekleme işlemi için, form oluşturuyoruz.-->
+                          <!-- Submit butonuna tıklandığı zaman ürünün id'sini ve adeti geldiği fonksiyona gönderiyoruz. -->
+
+                          {% csrf_token %}
+                          <input type="hidden" name="urun_id" value="{{urun.id}}">
+                          <p> <b>Adet : </b><input style="width: 30mm;" value="1" type="number" name="adet"></p>
+                          <button href="" class="btn btn-primary">Sepete Ekle</button>
+                        </form>
+                      </div>
+                  </div>
+              </div>
+              {% endfor %}
+          </div>
+      </div>
+  </section>
+   
+  </div>
+</div>
+<hr>
+
+{% endblock %}
